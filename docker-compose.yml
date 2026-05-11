@@ -1,0 +1,50 @@
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  ml-service:
+    build: ./ml-service
+    restart: unless-stopped
+    env_file:
+      - ./ml-service/.env.example
+    ports:
+      - "8000:8000"
+    volumes:
+      - ml-models:/app/storage/models
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env.example
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/disease_prediction
+      ML_SERVICE_URL: http://ml-service:8000/api
+      CLIENT_URL: http://localhost:5173
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+      - ml-service
+    volumes:
+      - backend-uploads:/app/storage/uploads
+      - backend-reports:/app/storage/reports
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+  ml-models:
+  backend-uploads:
+  backend-reports:
