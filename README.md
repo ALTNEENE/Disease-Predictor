@@ -90,6 +90,8 @@ The root `vercel.json` deploys `frontend/` as the static app and `api/[...path].
 
 Leave `VITE_API_URL` unset when frontend and backend are deployed in the same Vercel project; the frontend will use `/api`. Deploy `ml-service/` separately with persistent model storage and point `ML_SERVICE_URL` to that service. The `ml-service/vercel.json` file supports deploying it as a second Vercel project from the same monorepo for demos.
 
+The preferred Vercel root directory is the repository root. If an existing Vercel project is already rooted at `frontend/`, the `frontend/vercel.json` and `frontend/api/[...path].js` files let that setup deploy the Express API too. If Vercel creates separate projects from the same repository, use root directories `frontend`, `backend`, and `ml-service`; each folder now has its own Vercel config.
+
 ## Important ML Decision
 
 The ML service intentionally uses only:

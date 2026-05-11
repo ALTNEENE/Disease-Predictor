@@ -30,9 +30,11 @@ For production, create real `.env` files and reference them from `docker-compose
 
 ## Vercel Monorepo Deployment
 
-This repository includes a root `vercel.json`, root `package.json`, and `api/[...path].js` adapter so Vercel can deploy the React frontend and Express backend from the monorepo.
+This repository includes Vercel configs for both a combined deployment and separate projects from the same repository.
 
-1. Import the repository in Vercel with the repository root as the project root. In Vercel Project Settings, leave **Root Directory** empty or set it to the repository root. Do not set it to `frontend`.
+### Option A: One Vercel Project
+
+1. Import the repository in Vercel with the repository root as the project root. In Vercel Project Settings, leave **Root Directory** empty or set it to the repository root. This is the preferred setup.
 2. Keep the default install/build commands from `vercel.json`:
 
    ```bash
@@ -63,6 +65,44 @@ This repository includes a root `vercel.json`, root `package.json`, and `api/[..
    ALLOWED_ORIGINS=https://<your-frontend-vercel-domain>
    MODEL_DIR=/tmp/models
    ```
+
+If your existing Vercel project already has **Root Directory** set to `frontend`, the repo also includes `frontend/vercel.json`, `frontend/vercel-install.js`, and `frontend/api/[...path].js` so the Express API can still deploy from that project. In that setup, keep the Vercel commands from `frontend/vercel.json`.
+
+### Option B: Separate Vercel Projects
+
+Vercel may suggest creating separate projects from the same repository. That is supported too:
+
+| Project | Root Directory | Config file | Notes |
+| --- | --- | --- | --- |
+| Frontend | `frontend` | `frontend/vercel.json` | Set `VITE_API_URL` to the backend project URL ending in `/api`. |
+| Backend API | `backend` | `backend/vercel.json` | Set MongoDB, JWT, CORS, and ML service environment variables. |
+| ML service | `ml-service` | `ml-service/vercel.json` | Set `ALLOWED_ORIGINS` to the frontend URL. |
+
+Backend project environment variables:
+
+```bash
+NODE_ENV=production
+MONGODB_URI=<your MongoDB Atlas connection string>
+JWT_SECRET=<long random production secret>
+CLIENT_URL=https://<your-frontend-vercel-domain>
+ML_SERVICE_URL=https://<your-ml-service-vercel-domain>/api
+MAX_UPLOAD_MB=25
+```
+
+Frontend project environment variables when deployed separately:
+
+```bash
+VITE_API_URL=https://<your-backend-vercel-domain>/api
+```
+
+ML service project environment variables:
+
+```bash
+APP_NAME=Disease Prediction ML Service
+API_PREFIX=/api
+ALLOWED_ORIGINS=https://<your-frontend-vercel-domain>
+MODEL_DIR=/tmp/models
+```
 
 Vercel serverless functions have ephemeral local storage. The backend uses `/tmp` automatically on Vercel for uploaded datasets and generated reports, which is suitable for short-lived requests and demos. For production workflows that need uploaded datasets or generated PDFs to persist across deployments and cold starts, move those files to object storage such as Vercel Blob, S3, or another durable store.
 
