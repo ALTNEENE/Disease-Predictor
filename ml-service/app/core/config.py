@@ -8,6 +8,21 @@ def _csv(value: str) -> list[str]:
 
 
 _IS_VERCEL = bool(os.getenv("VERCEL"))
+_IS_PRODUCTION = os.getenv("NODE_ENV") == "production" or _IS_VERCEL
+
+
+def _is_local_url(value: str) -> bool:
+    return value.startswith("http://localhost") or value.startswith("http://127.0.0.1") or value.startswith("https://localhost") or value.startswith("https://127.0.0.1")
+
+
+def _origins() -> list[str]:
+    value = os.getenv("ALLOWED_ORIGINS", "")
+    origins = [origin for origin in _csv(value) if not (_IS_PRODUCTION and _is_local_url(origin))]
+    if origins:
+        return origins
+    if _IS_PRODUCTION:
+        return []
+    return ["http://localhost:5173", "http://localhost:3000"]
 
 
 def _default_model_dir() -> str:
@@ -22,14 +37,7 @@ class Settings:
     api_prefix: str = os.getenv("API_PREFIX", "/api")
     model_dir: Path = Path(os.getenv("MODEL_DIR", _default_model_dir()))
     max_tree_depth: int = int(os.getenv("MAX_TREE_DEPTH", "8"))
-    allowed_origins: list[str] = field(
-        default_factory=lambda: _csv(
-            os.getenv(
-                "ALLOWED_ORIGINS",
-                "http://localhost:5173,http://localhost:3000",
-            )
-        )
-    )
+    allowed_origins: list[str] = field(default_factory=_origins)
 
 
 settings = Settings()

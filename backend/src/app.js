@@ -9,9 +9,10 @@ const routes = require("./routes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
+const corsOrigins = env.clientUrl ? env.clientUrl.split(",").map((origin) => origin.trim()).filter(Boolean) : [];
 
 app.use(helmet());
-app.use(cors({ origin: env.clientUrl, credentials: true }));
+app.use(cors({ origin: corsOrigins.length ? corsOrigins : false, credentials: true }));
 app.use(compression());
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
