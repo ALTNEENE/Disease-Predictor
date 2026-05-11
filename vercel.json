@@ -5,9 +5,7 @@
   "functions": {
     "api/[...path].js": {
       "maxDuration": 60,
-      "includeFiles": [
-        "backend/src/**"
-      ]
+      "includeFiles": "backend/src/**"
     }
   },
   "rewrites": [
