@@ -32,12 +32,12 @@ For production, create real `.env` files and reference them from `docker-compose
 
 This repository includes a root `vercel.json`, root `package.json`, and `api/[...path].js` adapter so Vercel can deploy the React frontend and Express backend from the monorepo.
 
-1. Import the repository in Vercel with the repository root as the project root.
+1. Import the repository in Vercel with the repository root as the project root. In Vercel Project Settings, leave **Root Directory** empty or set it to the repository root. Do not set it to `frontend`.
 2. Keep the default install/build commands from `vercel.json`:
 
    ```bash
-   npm install --prefix frontend && npm install --prefix backend
-   npm --prefix frontend run build
+   npm install
+   npm run build
    ```
 
 3. Set these Vercel environment variables:
