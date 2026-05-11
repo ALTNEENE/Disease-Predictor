@@ -40,6 +40,8 @@ This repository includes a root `vercel.json`, root `package.json`, and `api/[..
    npm run build
    ```
 
+   The root build script compiles `frontend/` and copies `frontend/dist` to a root-level `dist/` folder, which is the Vercel output directory.
+
 3. Set these Vercel environment variables:
 
    ```bash
