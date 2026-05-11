@@ -36,8 +36,8 @@ This repository includes a root `vercel.json`, root `package.json`, and `api/[..
 2. Keep the default install/build commands from `vercel.json`:
 
    ```bash
-   npm install
-   npm run build --workspace frontend
+   npm install --prefix frontend && npm install --prefix backend
+   npm --prefix frontend run build
    ```
 
 3. Set these Vercel environment variables:
