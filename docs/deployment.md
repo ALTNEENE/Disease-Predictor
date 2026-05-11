@@ -76,7 +76,7 @@ Vercel may suggest creating separate projects from the same repository. That is 
 | --- | --- | --- | --- |
 | Frontend | `frontend` | `frontend/vercel.json` | Set `VITE_API_URL` to the backend project URL ending in `/api`. |
 | Backend API | `backend` | `backend/vercel.json` | Set MongoDB, JWT, CORS, and ML service environment variables. Clear any old Output Directory setting in Vercel, or set it to `public`. |
-| ML service | `ml-service` | `ml-service/vercel.json` | Set `ALLOWED_ORIGINS` to the frontend URL. |
+| ML service | `ml-service` | `ml-service/vercel.json` | Set `ALLOWED_ORIGINS` to the frontend URL. Leave Install Command and Build Command empty in Vercel so Python dependency bundling can be optimized automatically. |
 
 Backend project environment variables:
 
@@ -107,6 +107,8 @@ API_PREFIX=/api
 ALLOWED_ORIGINS=https://<your-frontend-vercel-domain>
 MODEL_DIR=/tmp/models
 ```
+
+The ML service intentionally avoids a custom Vercel install command because custom Python installs disable Vercel's dependency bundling optimizations. `uvicorn` is installed without the `standard` extras to avoid packaging unused server packages such as `uvloop`, `watchfiles`, and `websockets`.
 
 Vercel serverless functions have ephemeral local storage. The backend uses `/tmp` automatically on Vercel for uploaded datasets and generated reports, which is suitable for short-lived requests and demos. For production workflows that need uploaded datasets or generated PDFs to persist across deployments and cold starts, move those files to object storage such as Vercel Blob, S3, or another durable store.
 
