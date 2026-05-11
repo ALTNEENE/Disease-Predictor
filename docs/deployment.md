@@ -97,6 +97,8 @@ Frontend project environment variables when deployed separately:
 VITE_API_URL=https://<your-backend-vercel-domain>/api
 ```
 
+Do not use `http://localhost:5000/api` in Vercel frontend environment variables. Production builds ignore localhost API URLs and fall back to same-origin `/api`; for separate frontend/backend projects, set `VITE_API_URL` to the deployed backend URL.
+
 ML service project environment variables:
 
 ```bash

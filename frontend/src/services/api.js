@@ -1,6 +1,13 @@
 import axios from "axios";
 
-const apiBaseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "/api" : "http://localhost:5000/api");
+const configuredApiUrl = import.meta.env.VITE_API_URL;
+const configuredApiIsLocalhost = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(\/|$)/i.test(configuredApiUrl || "");
+const apiBaseUrl =
+  configuredApiUrl && !(import.meta.env.PROD && configuredApiIsLocalhost)
+    ? configuredApiUrl
+    : import.meta.env.PROD
+      ? "/api"
+      : "http://localhost:5000/api";
 
 const api = axios.create({
   baseURL: apiBaseUrl
