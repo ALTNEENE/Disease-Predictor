@@ -75,7 +75,7 @@ Vercel may suggest creating separate projects from the same repository. That is 
 | Project | Root Directory | Config file | Notes |
 | --- | --- | --- | --- |
 | Frontend | `frontend` | `frontend/vercel.json` | Set `VITE_API_URL` to the backend project URL ending in `/api`. |
-| Backend API | `backend` | `backend/vercel.json` | Set MongoDB, JWT, CORS, and ML service environment variables. Clear any old Output Directory setting in Vercel, or set it to `public`. |
+| Backend API | `backend` | `backend/vercel.json` | Set MongoDB, JWT, CORS, and ML service environment variables. Clear any old Output Directory setting in Vercel. This API-only project should not have an output directory. |
 | ML service | `ml-service` | `ml-service/vercel.json` | Set `ALLOWED_ORIGINS` to the frontend URL. Leave Install Command and Build Command empty in Vercel so Python dependency bundling can be optimized automatically. |
 
 Backend project environment variables:
