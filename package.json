@@ -1,5 +1,5 @@
 {
-  "name": "nazacare-monorepo",
+  "name": "disease-prediction-monorepo",
   "version": "1.0.0",
   "private": true,
   "workspaces": [
