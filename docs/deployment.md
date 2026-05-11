@@ -75,7 +75,7 @@ Vercel may suggest creating separate projects from the same repository. That is 
 | Project | Root Directory | Config file | Notes |
 | --- | --- | --- | --- |
 | Frontend | `frontend` | `frontend/vercel.json` | Set `VITE_API_URL` to the backend project URL ending in `/api`. |
-| Backend API | `backend` | `backend/vercel.json` | Set MongoDB, JWT, CORS, and ML service environment variables. |
+| Backend API | `backend` | `backend/vercel.json` | Set MongoDB, JWT, CORS, and ML service environment variables. Clear any old Output Directory setting in Vercel, or set it to `public`. |
 | ML service | `ml-service` | `ml-service/vercel.json` | Set `ALLOWED_ORIGINS` to the frontend URL. |
 
 Backend project environment variables:
@@ -88,6 +88,8 @@ CLIENT_URL=https://<your-frontend-vercel-domain>
 ML_SERVICE_URL=https://<your-ml-service-vercel-domain>/api
 MAX_UPLOAD_MB=25
 ```
+
+After deploying the backend project, test `https://<your-backend-domain>/api/health`. Visiting the backend root URL should show a small API landing page; application endpoints still require a valid `MONGODB_URI`.
 
 Frontend project environment variables when deployed separately:
 

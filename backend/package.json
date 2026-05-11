@@ -4,7 +4,7 @@
   "description": "Express API for the Disease Prediction & Data Analysis System",
   "main": "src/server.js",
   "scripts": {
-    "build": "node --check src/server.js && node --check api/[...path].js",
+    "build": "node scripts/vercel-build.js",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
     "lint": "node --check src/server.js"

@@ -13,9 +13,26 @@ function ensureDatabase() {
   return connectionPromise;
 }
 
+function pathname(req) {
+  return new URL(req.url || "/", "http://localhost").pathname;
+}
+
+function isHealthRequest(req) {
+  const path = pathname(req);
+  return path === "/" || path === "/api" || path === "/api/" || path === "/api/health";
+}
+
 module.exports = async function handler(req, res) {
-  if (!req.url.startsWith("/api/health")) {
-    await ensureDatabase();
+  if (!isHealthRequest(req)) {
+    try {
+      await ensureDatabase();
+    } catch (error) {
+      return res.status(500).json({
+        status: "error",
+        message: "Database connection failed. Check MONGODB_URI in Vercel environment variables.",
+        detail: error.message
+      });
+    }
   }
 
   return app(req, res);
