@@ -16,13 +16,11 @@ def _is_local_url(value: str) -> bool:
 
 
 def _origins() -> list[str]:
-    value = os.getenv("ALLOWED_ORIGINS", "")
+    value = os.getenv("ALLOWED_ORIGINS", "*")
     origins = [origin for origin in _csv(value) if not (_IS_PRODUCTION and _is_local_url(origin))]
     if origins:
         return origins
-    if _IS_PRODUCTION:
-        return []
-    return ["http://localhost:5173", "http://localhost:3000"]
+    return ["*"]
 
 
 def _default_model_dir() -> str:
