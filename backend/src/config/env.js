@@ -27,8 +27,4 @@ const env = {
   maxUploadMb: Number(process.env.MAX_UPLOAD_MB || 25)
 };
 
-if (isProduction && (!env.clientUrl || !env.mlServiceUrl)) {
-  throw new Error("Production deployment requires non-local CLIENT_URL and ML_SERVICE_URL environment variables.");
-}
-
 module.exports = env;

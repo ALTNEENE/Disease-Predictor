@@ -6,7 +6,7 @@ const rootDir = path.resolve(__dirname, "..");
 const distDir = path.join(rootDir, "dist");
 const nodeCommand = process.execPath;
 
-for (const file of ["src/server.js", "api/[...path].js"]) {
+for (const file of ["server.js", "src/server.js", "api/[...path].js"]) {
   const result = spawnSync(nodeCommand, ["--check", file], {
     cwd: rootDir,
     stdio: "inherit"

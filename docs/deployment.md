@@ -32,19 +32,13 @@ For production, create real `.env` files and reference them from `docker-compose
 
 This repository includes Vercel configs for both a combined deployment and separate projects from the same repository.
 
-### Option A: One Vercel Project
+### Option A: One Vercel Monorepo Project
 
 1. Import the repository in Vercel with the repository root as the project root. In Vercel Project Settings, leave **Root Directory** empty or set it to the repository root. This is the preferred setup.
-2. Keep the default install/build commands from `vercel.json`:
+2. Use the root `vercel.json` service map. It deploys `frontend/` at `/` with the Vite framework and `backend/server.js` under `/api` with the Express framework.
+3. Clear any old single-app Vercel settings such as **Output Directory**, custom Build Command, or custom Install Command if they were set while debugging previous deployments. Let the monorepo service configuration drive the build.
 
-   ```bash
-   npm install
-   npm run build
-   ```
-
-   The root build script compiles `frontend/` and copies `frontend/dist` to a root-level `dist/` folder, which is the Vercel output directory.
-
-3. Set these Vercel environment variables:
+4. Set these Vercel environment variables:
 
    ```bash
    NODE_ENV=production
@@ -55,9 +49,9 @@ This repository includes Vercel configs for both a combined deployment and separ
    MAX_UPLOAD_MB=25
    ```
 
-4. Do not set `VITE_API_URL` for the same Vercel project. The frontend will call the same-origin `/api` route automatically. Set `VITE_API_URL` only when the backend is hosted on a different domain.
+5. Do not set `VITE_API_URL` for the same Vercel project. The frontend will call the same-origin `/api` route automatically. Set `VITE_API_URL` only when the backend is hosted on a different domain.
 
-5. Deploy the ML service separately, then point `ML_SERVICE_URL` at it. For a Vercel monorepo setup, create a second Vercel project using `ml-service/` as the root directory. The included `ml-service/vercel.json` exposes the FastAPI app through that project. Set:
+6. Deploy the ML service separately, then point `ML_SERVICE_URL` at it. Create a second Vercel project using `ml-service/` as the root directory. The included `ml-service/vercel.json` exposes the FastAPI app through that project. Set:
 
    ```bash
    APP_NAME=Disease Prediction ML Service
@@ -66,7 +60,7 @@ This repository includes Vercel configs for both a combined deployment and separ
    MODEL_DIR=/tmp/models
    ```
 
-If your existing Vercel project already has **Root Directory** set to `frontend`, the repo also includes `frontend/vercel.json`, `frontend/vercel-install.js`, and `frontend/api/[...path].js` so the Express API can still deploy from that project. In that setup, keep the Vercel commands from `frontend/vercel.json`.
+If your existing Vercel project already has **Root Directory** set to `frontend`, create a new project from the repository root for the monorepo deployment. The frontend-only project will not deploy the root Express service map.
 
 ### Option B: Separate Vercel Projects
 

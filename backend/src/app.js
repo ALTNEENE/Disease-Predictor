@@ -27,6 +27,7 @@ app.use(
 app.use(morgan(env.nodeEnv === "production" ? "combined" : "dev"));
 
 app.use("/api", routes);
+app.use("/", routes);
 app.use(notFound);
 app.use(errorHandler);
 
